@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persons List</title>
+    <script>
+        function fetchPersons() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("GET", "http://34.118.73.136:8080/getPersons", true);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        displayPersons(response);
+                    } else {
+                        displayError("Failed to fetch data. Please try again later.");
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+
+        function displayPersons(persons) {
+            var displayArea = document.getElementById("displayArea");
+            displayArea.innerHTML = ""; // Clear previous content
+
+            var list = "<ul>";
+            for (var i = 0; i < persons.length; i++) {
+                list += "<li>ID: " + persons[i].id + ", Name: " + persons[i].name + "</li>";
+            }
+            list += "</ul>";
+            displayArea.innerHTML = list;
+        }
+
+        function displayError(errorMessage) {
+            var errorArea = document.getElementById("errorArea");
+            errorArea.textContent = errorMessage;
+        }
+    </script>
+</head>
+<body>
+<button onclick="fetchPersons()">Fetch Persons</button><br><br>
+<div id="displayArea"></div>
+<div id="errorArea" style="color: red;"></div>
+</body>
+</html>
